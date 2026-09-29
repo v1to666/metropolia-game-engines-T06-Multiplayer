@@ -6,7 +6,10 @@ public class PlayerMovement : MonoBehaviourPun
 {
     private CharacterController _characterController;
 
-    private float _speed = 5f;
+    private float _walkSpeed = 4f;
+    private float _runSpeed = 8f;
+
+    private float _currentSpeed;
 
     private void Start()
     {
@@ -20,6 +23,15 @@ public class PlayerMovement : MonoBehaviourPun
             return;
         }
 
+        _currentSpeed = Mathf.Lerp(_currentSpeed, UpdateSpeed(), 5f * Time.deltaTime);
+
+        Move();
+
+        Debug.Log(_currentSpeed);
+    }
+
+    private void Move()
+    {
         Vector2 input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 
         if (input.magnitude > 0.5f)
@@ -29,8 +41,18 @@ public class PlayerMovement : MonoBehaviourPun
 
         Vector3 targetDirection = transform.right * input.x + transform.forward * input.y;
 
-        Vector3 targetVelocity = targetDirection * _speed * Time.deltaTime;
+        Vector3 targetVelocity = targetDirection * _currentSpeed * Time.deltaTime;
 
         _characterController.Move(targetVelocity);
+    }
+
+    private float UpdateSpeed()
+    {
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            return _runSpeed;
+        }
+
+        return _walkSpeed;
     }
 }
