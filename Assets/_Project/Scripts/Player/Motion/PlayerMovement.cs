@@ -26,8 +26,6 @@ public class PlayerMovement : MonoBehaviourPun
         _currentSpeed = Mathf.Lerp(_currentSpeed, UpdateSpeed(), 5f * Time.deltaTime);
 
         Move();
-
-        Debug.Log(_currentSpeed);
     }
 
     private void Move()

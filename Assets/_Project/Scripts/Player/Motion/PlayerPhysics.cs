@@ -5,12 +5,14 @@ public class PlayerPhysics : MonoBehaviourPun
 {
     [SerializeField] private CharacterController _characterController;
     [SerializeField] private Transform _groundCheckPivot;
+    [SerializeField] private LayerMask _ignoreLayer;
 
     private float _gravity = -25f;
     private float _jumpHeight = 3f;
 
     private float _verticalVelocity;
     private bool _isGrounded;
+    private float _groundCheckRayDistance = 0.05f;
 
     private void Start()
     {
@@ -34,17 +36,24 @@ public class PlayerPhysics : MonoBehaviourPun
 
     private void ApplyGravity()
     {
-        if (_characterController.isGrounded && _verticalVelocity < 0f)
+        if (_isGrounded && _verticalVelocity < 0f)
         {
             _verticalVelocity = -2f;
         }
 
         _verticalVelocity += _gravity * Time.deltaTime;
+
+        Debug.Log(_verticalVelocity);
     }
 
     private void Jump()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && _isGrounded)
+        if (!_isGrounded)
+        {
+            return;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             _verticalVelocity = Mathf.Sqrt(_jumpHeight * -2f * _gravity);
         }
@@ -52,6 +61,12 @@ public class PlayerPhysics : MonoBehaviourPun
 
     private bool IsGrounded()
     {
-        return true;
+        return Physics.Raycast(_groundCheckPivot.position, Vector3.down, _groundCheckRayDistance, ~_ignoreLayer);
+    }
+
+    private void OnDrawGizmos()
+    {
+
+        Gizmos.DrawRay(_groundCheckPivot.position, Vector3.down * _groundCheckRayDistance);
     }
 }
