@@ -17,12 +17,17 @@ public class Weapon : MonoBehaviour
 
     private void Fire()
     {
-        foreach (RaycastHit raycastHit in Physics.RaycastAll(_camera.transform.position, Vector3.forward, 100f))
+        foreach (RaycastHit raycastHit in Physics.RaycastAll(_camera.transform.position, _camera.transform.forward, 100f))
         {
             if (raycastHit.collider.TryGetComponent<IDamageable>(out IDamageable damageable))
             {
                 damageable.TakeDamage(_damage);
             }
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawRay(_camera.transform.position, _camera.transform.forward * 100f);
     }
 }

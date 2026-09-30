@@ -26,6 +26,21 @@ public class Player : MonoBehaviour, IDamageable
         _health -= damage;
 
         OnValueChanged();
+
+        CheckDead();
+    }
+
+    private void CheckDead()
+    {
+        if (_health <= 0)
+        {
+            Die();
+        }
+    }
+
+    private void Die()
+    {
+        Destroy(gameObject);
     }
 
     private void Update()
