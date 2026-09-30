@@ -5,7 +5,6 @@ public class PlayerPhysics : MonoBehaviourPun
 {
     [SerializeField] private CharacterController _characterController;
     [SerializeField] private Transform _groundCheckPivot;
-    [SerializeField] private LayerMask _ignoreLayer;
 
     private float _gravity = -25f;
     private float _jumpHeight = 3f;
@@ -42,8 +41,6 @@ public class PlayerPhysics : MonoBehaviourPun
         }
 
         _verticalVelocity += _gravity * Time.deltaTime;
-
-        Debug.Log(_verticalVelocity);
     }
 
     private void Jump()
@@ -61,7 +58,7 @@ public class PlayerPhysics : MonoBehaviourPun
 
     private bool IsGrounded()
     {
-        return Physics.Raycast(_groundCheckPivot.position, Vector3.down, _groundCheckRayDistance, ~_ignoreLayer);
+        return Physics.Raycast(_groundCheckPivot.position, Vector3.down, _groundCheckRayDistance);
     }
 
     private void OnDrawGizmos()

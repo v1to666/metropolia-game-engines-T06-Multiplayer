@@ -1,23 +1,38 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour, IDamageable
 {
-    private int _maxHealth = 40;
+    [SerializeField] private Slider _healthSlider;
+
+    private float _maxHealth = 100;
     
-    private int _health;
+    private float _health;
 
     private void Start()
     {
         _health = _maxHealth;
+
+        _healthSlider.value = _health;
     }
 
     public void OnValueChanged()
     {
-
+        _healthSlider.value = _health;
     }
 
-    public void GetDamage(int damage)
+    public void TakeDamage(float damage)
     {
         _health -= damage;
+
+        OnValueChanged();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Minus))
+        {
+            TakeDamage(10);
+        }
     }
 }
