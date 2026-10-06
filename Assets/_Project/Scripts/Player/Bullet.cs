@@ -23,14 +23,15 @@ public class Bullet : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider collider)
+    private void OnCollisionEnter(Collision collision)
     {
-        if (collider.TryGetComponent(out IDamageable damageable))
+        if (GetComponent<Collider>().TryGetComponent(out IDamageable damageable))
         {
             damageable.TakeDamage(_damage);
+
+            Destroy(gameObject);
         }
 
-        Destroy(gameObject);
     }
 
     public void Initialize(float damage, float bulletSpeed)
