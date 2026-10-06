@@ -1,33 +1,30 @@
+using Photon.Pun;
 using UnityEngine;
 
-public class Weapon : MonoBehaviour
+public class Weapon : MonoBehaviourPun
 {
-    [SerializeField] private Camera _camera;
+    [SerializeField] private Bullet _bulletPrefab;
+    [SerializeField] private Transform _shootPoint;
     private float _damage = 10f;
+    private float _bulletSpeed = 50f;
 
     private void Update()
     {
+        if (!photonView.IsMine)
+        {
+            return;
+        }
+
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             Fire();
-
-            Debug.Log("Fire in the hole!");
         }
     }
 
     private void Fire()
     {
-        foreach (RaycastHit raycastHit in Physics.RaycastAll(_camera.transform.position, _camera.transform.forward, 100f))
-        {
-            if (raycastHit.collider.TryGetComponent<IDamageable>(out IDamageable damageable))
-            {
-                damageable.TakeDamage(_damage);
-            }
-        }
-    }
+        Bullet bullet = Instantiate(_bulletPrefab, _shootPoint.position, _shootPoint.rotation);
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawRay(_camera.transform.position, _camera.transform.forward * 100f);
+        bullet.Initialize(_damage, _bulletSpeed);
     }
 }

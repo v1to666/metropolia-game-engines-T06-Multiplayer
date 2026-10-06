@@ -20,7 +20,7 @@ public class NetworkConnection : MonoBehaviourPunCallbacks
     {
         base.OnJoinedRoom();
 
-        Vector3 spawnPosition = new Vector3(Random.Range(-10f, 10f), 1f, Random.Range(-10f, 10f));
+        Vector3 spawnPosition = new Vector3(Random.Range(-5f, 5f), 0f, Random.Range(-5f, 5f));
 
         PhotonNetwork.Instantiate("Player", spawnPosition, Quaternion.identity);
     }

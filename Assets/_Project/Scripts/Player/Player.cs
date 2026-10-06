@@ -1,38 +1,56 @@
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Player : MonoBehaviour, IDamageable
+public class Player : MonoBehaviourPun, IDamageable
 {
     [SerializeField] private Slider _healthSlider;
+    [SerializeField] private Slider _myHealthSlider;
 
-    private float _maxHealth = 100;
-    
+    [SerializeField] private GameObject _model;
+    [SerializeField] private GameObject _deathScreen;
+
+    [SerializeField] private PlayerMovement _movement;
+    [SerializeField] private PlayerPhysics _physics;
+    [SerializeField] private PlayerView _view;
+    [SerializeField] private Weapon _weapon;
+
+    private float _maxHealth = 100f;
     private float _health;
+
+    private bool _isDead;
 
     private void Start()
     {
         _health = _maxHealth;
 
+        _healthSlider.maxValue = _maxHealth;
         _healthSlider.value = _health;
-    }
 
-    public void OnValueChanged()
-    {
-        _healthSlider.value = _health;
+        _myHealthSlider.maxValue = _maxHealth;
+        _myHealthSlider.value = _health;
+
+        _deathScreen.SetActive(false);
     }
 
     public void TakeDamage(float damage)
     {
-        _health -= damage;
-
-        OnValueChanged();
-
-        CheckDead();
+        photonView.RPC(nameof(RPC_TakeDamage), RpcTarget.All, damage);
     }
 
-    private void CheckDead()
+    [PunRPC]
+    private void RPC_TakeDamage(float damage)
     {
-        if (_health <= 0)
+        if (_isDead)
+        {
+            return;
+        }
+
+        _health -= damage;
+        _healthSlider.value = _health;
+        _myHealthSlider.value = _health;
+
+        if (_health <= 0f)
         {
             Die();
         }
@@ -40,14 +58,23 @@ public class Player : MonoBehaviour, IDamageable
 
     private void Die()
     {
-        Destroy(gameObject);
-    }
+        _isDead = true;
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Minus))
+        _model.SetActive(false);
+
+        if (!photonView.IsMine)
         {
-            TakeDamage(10);
+            return;
         }
+
+        _movement.enabled = false;
+        _physics.enabled = false;
+        _view.enabled = false;
+        _weapon.enabled = false;
+
+        _deathScreen.SetActive(true);
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 }

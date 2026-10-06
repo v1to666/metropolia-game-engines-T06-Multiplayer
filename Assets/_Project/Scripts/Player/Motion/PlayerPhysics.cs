@@ -11,7 +11,7 @@ public class PlayerPhysics : MonoBehaviourPun
 
     private float _verticalVelocity;
     private bool _isGrounded;
-    private float _groundCheckRayDistance = 0.05f;
+    private float _groundCheckRayDistance = 0.5f;
 
     private void Start()
     {
@@ -35,12 +35,9 @@ public class PlayerPhysics : MonoBehaviourPun
 
     private void ApplyGravity()
     {
-        if (_isGrounded && _verticalVelocity < 0f)
-        {
-            _verticalVelocity = -2f;
-        }
-
         _verticalVelocity += _gravity * Time.deltaTime;
+
+        _verticalVelocity = Mathf.Clamp(_verticalVelocity, -10f, 10f);
     }
 
     private void Jump()

@@ -1,10 +1,11 @@
+using Photon.Pun;
 using UnityEngine;
 
-public class PlayerView : MonoBehaviour
+public class PlayerView : MonoBehaviourPun
 {
     [SerializeField] private Camera _camera;
 
-    private float _sensitivity = 2f;
+    private float _sensitivity = 1.5f;
 
     private float _minXRotation = -85f;
     private float _maxXRotation = 85f;
@@ -20,6 +21,11 @@ public class PlayerView : MonoBehaviour
 
     private void Update()
     {
+        if (!photonView.IsMine)
+        {
+            return;
+        }
+
         Look();
     }
 
