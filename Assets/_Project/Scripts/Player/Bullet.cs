@@ -1,7 +1,8 @@
+using Photon.Pun;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
-public class Bullet : MonoBehaviour
+public class Bullet : MonoBehaviourPun
 {
     private Rigidbody _rigidBody;
 
@@ -25,13 +26,14 @@ public class Bullet : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (GetComponent<Collider>().TryGetComponent(out IDamageable damageable))
+        IDamageable damageable = collision.collider.GetComponentInParent<IDamageable>();
+
+        if (damageable != null)
         {
             damageable.TakeDamage(_damage);
 
             Destroy(gameObject);
-        }
-
+        }        
     }
 
     public void Initialize(float damage, float bulletSpeed)
