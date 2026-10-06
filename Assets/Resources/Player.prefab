@@ -2254,7 +2254,7 @@ MonoBehaviour:
   _movement: {fileID: 2353369538419785360}
   _physics: {fileID: 3138355706731522434}
   _view: {fileID: 4698756504093073203}
-  _weapon: {fileID: 0}
+  _weapon: {fileID: 7978903646586247222}
 --- !u!114 &-1056786126287583616
 MonoBehaviour:
   m_ObjectHideFlags: 0
