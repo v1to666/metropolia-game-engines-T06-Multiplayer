@@ -2,12 +2,15 @@ using Photon.Pun;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
-public class Bullet : MonoBehaviourPun
+public class Bullet : MonoBehaviour
 {
     private Rigidbody _rigidBody;
 
-    float _lifeTime = 10f;
-    float _damage;
+    private float _lifeTime = 10f;
+    private float _damage;
+
+    private bool _canDealDamage;
+    private bool _hasHit;
 
     private void Awake()
     {
@@ -26,19 +29,41 @@ public class Bullet : MonoBehaviourPun
 
     private void OnCollisionEnter(Collision collision)
     {
-        IDamageable damageable = collision.collider.GetComponentInParent<IDamageable>();
-
-        if (damageable != null)
+        if (_hasHit)
         {
-            damageable.TakeDamage(_damage);
+            return;
+        }
 
-            Destroy(gameObject);
-        }        
+        _hasHit = true;
+
+        if (_canDealDamage)
+        {
+            IDamageable damageable = collision.collider.GetComponentInParent<IDamageable>();
+
+            if (damageable != null)
+            {
+                damageable.TakeDamage(_damage);
+
+                Destroy(gameObject);
+            }
+        }
     }
 
-    public void Initialize(float damage, float bulletSpeed)
+    public void Initialize(float damage, float bulletSpeed, PhotonView shooter)
     {
         _damage = damage;
+        _canDealDamage = shooter.IsMine;
+
+        Collider[] bulletColliders = GetComponentsInChildren<Collider>();
+        Collider[] playerColliders = shooter.GetComponentsInChildren<Collider>(true);
+
+        foreach (Collider bulletCollider in bulletColliders)
+        {
+            foreach (Collider playerCollider in playerColliders)
+            {
+                Physics.IgnoreCollision(bulletCollider, playerCollider);
+            }
+        }
 
         _rigidBody.linearVelocity = transform.forward * bulletSpeed;
     }

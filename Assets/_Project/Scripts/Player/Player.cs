@@ -20,37 +20,51 @@ public class Player : MonoBehaviourPun, IDamageable
 
     private bool _isDead;
 
-    private void Start()
+    private void Awake()
     {
         _health = _maxHealth;
+    }
 
+    private void Start()
+    {
         _healthSlider.maxValue = _maxHealth;
         _healthSlider.value = _health;
 
         _myHealthSlider.maxValue = _maxHealth;
         _myHealthSlider.value = _health;
 
-        _deathScreen.SetActive(false);
+        _myHealthSlider.gameObject.SetActive(photonView.IsMine);
+
+        _deathScreen.SetActive(_isDead && photonView.IsMine);
     }
 
     public void TakeDamage(float damage)
     {
-        photonView.RPC(nameof(RPC_TakeDamage), RpcTarget.All, damage);
+        photonView.RPC(nameof(RPC_TakeDamage), photonView.Owner, damage);
     }
 
     [PunRPC]
     private void RPC_TakeDamage(float damage)
     {
-        if (_isDead)
+        if (!photonView.IsMine || _isDead || damage <= 0f)
         {
             return;
         }
 
-        _health -= damage;
+        _health = Mathf.Max(0f, _health - damage);
+
+        photonView.RPC(nameof(RPC_UpdateHealth), RpcTarget.All, _health);
+    }
+
+    [PunRPC]
+    private void RPC_UpdateHealth(float health)
+    {
+        _health = health;
+
         _healthSlider.value = _health;
         _myHealthSlider.value = _health;
 
-        if (_health <= 0f)
+        if (_health <= 0f && !_isDead)
         {
             Die();
         }
@@ -61,6 +75,14 @@ public class Player : MonoBehaviourPun, IDamageable
         _isDead = true;
 
         _model.SetActive(false);
+        _healthSlider.gameObject.SetActive(false);
+
+        Collider[] colliders = GetComponentsInChildren<Collider>();
+
+        foreach (Collider playerCollider in colliders)
+        {
+            playerCollider.enabled = false;
+        }
 
         if (!photonView.IsMine)
         {

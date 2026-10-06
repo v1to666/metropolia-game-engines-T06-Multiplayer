@@ -5,6 +5,7 @@ public class Weapon : MonoBehaviourPun
 {
     [SerializeField] private Bullet _bulletPrefab;
     [SerializeField] private Transform _shootPoint;
+
     private float _damage = 10f;
     private float _bulletSpeed = 50f;
 
@@ -23,8 +24,14 @@ public class Weapon : MonoBehaviourPun
 
     private void Fire()
     {
-        Bullet bullet = Instantiate(_bulletPrefab, _shootPoint.position, _shootPoint.rotation);
+        photonView.RPC(nameof(RPC_Fire), RpcTarget.All, _shootPoint.position, _shootPoint.rotation);
+    }
 
-        bullet.Initialize(_damage, _bulletSpeed);
+    [PunRPC]
+    private void RPC_Fire(Vector3 position, Quaternion rotation)
+    {
+        Bullet bullet = Instantiate(_bulletPrefab, position, rotation);
+
+        bullet.Initialize(_damage, _bulletSpeed, photonView);
     }
 }

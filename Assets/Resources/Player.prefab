@@ -1930,7 +1930,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5264405123752016343}
-  - component: {fileID: 2967738320574307383}
   m_Layer: 0
   m_Name: Weapon
   m_TagString: Untagged
@@ -1955,20 +1954,6 @@ Transform:
   - {fileID: 88878931721990203}
   m_Father: {fileID: 5835354962467870791}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2967738320574307383
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4660338268280324303}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 817a10512c8631446a44d31502801dcf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Weapon
-  _bulletPrefab: {fileID: 7624113698393157521, guid: 072a67fd18c13f44a8bcad4902fdd684, type: 3}
-  _shootPoint: {fileID: 88878931721990203}
 --- !u!1 &4665289511880859867
 GameObject:
   m_ObjectHideFlags: 0
@@ -2223,6 +2208,7 @@ GameObject:
   - component: {fileID: 6949486062119928676}
   - component: {fileID: 2353369538419785360}
   - component: {fileID: 3138355706731522434}
+  - component: {fileID: 7978903646586247222}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -2268,7 +2254,7 @@ MonoBehaviour:
   _movement: {fileID: 2353369538419785360}
   _physics: {fileID: 3138355706731522434}
   _view: {fileID: 4698756504093073203}
-  _weapon: {fileID: 2967738320574307383}
+  _weapon: {fileID: 0}
 --- !u!114 &-1056786126287583616
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2390,6 +2376,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerPhysics
   _characterController: {fileID: 6949486062119928676}
   _groundCheckPivot: {fileID: 8260560059789033479}
+--- !u!114 &7978903646586247222
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5505821816093882376}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 817a10512c8631446a44d31502801dcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Weapon
+  _bulletPrefab: {fileID: 7624113698393157521, guid: 072a67fd18c13f44a8bcad4902fdd684, type: 3}
+  _shootPoint: {fileID: 88878931721990203}
 --- !u!1 &5721329591229216751
 GameObject:
   m_ObjectHideFlags: 0
